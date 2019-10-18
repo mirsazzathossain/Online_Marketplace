@@ -1,0 +1,98 @@
+@font-face {
+	font-family: 'HelveticaNeueLTPro';
+	src: url("../fonts/HelveticaNeueLTPro-Md.woff");
+}
+
+/*--- Navbar ---*/
+
+.navbar{
+    padding-left: 20px;
+    font-family: 'HelveticaNeueLTPro', sans-serif;
+    font-weight: 300;
+    font-size: 13px;
+    letter-spacing: .02rem;
+    background: #000;
+	transition: 500ms ease;
+}
+
+.navbar-brand{
+    text-transform: none;
+    font-family: 'HelveticaNeueLTPro', sans-serif;
+    font-weight: bold; 
+    font-size: 25px;
+    color: white !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.25);
+    padding-right: 15px !important;
+}
+
+.navbar-brand span {
+    color: #ffc515 !important;
+}
+
+.nav-link{
+    display: inline !important;
+    color: #fff !important;
+    font-size: 15px;
+}
+
+.navbar-dark .navbar-nav .nav-link.active,
+.navbar-dark .navbar-nav .nav-link:hover{
+    color: #ffc515 !important;
+}
+
+.shopping-cart{
+    display: inline-block;
+    position: relative;
+}
+
+.shopping-cart i {
+    color: white;
+    font-size: 20px;
+}
+
+.shopping-cart span{
+	position: absolute;
+    top: -7px;
+	left: 100%;
+	height: 16px;
+	min-width: 16px;
+	color: #000;
+	font-size: 10px;
+	background: #ffc515;
+	text-align: center;
+    border-radius: 32px;
+    padding-top: 1px;
+	margin-left: -5px;
+}
+
+.navbar-dark .navbar-toggler-icon{
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255, 0.9)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+}
+
+.navbar-dark .navbar-toggler{
+    border-color: white;
+    -moz-transition: transform .1s ease;
+    -ms-transition: transform .1s ease;
+    -o-transition: transform .1s ease;
+    -webkit-transition: transform .1s ease;
+    transition: transform .1s ease;
+}
+
+.navbar-dark .navbar-toggler:hover{
+    -webkit-transform: scale(1.05) !important; 
+    -moz-transform: scale(1.05) !important; 
+    -ms-transform: scale(1.05) !important; 
+    -o-transform: scale(1.05) !important;
+    transform: scale(1.05) !important;
+}
+
+.navbar-dark .navbar-toggler:focus{
+    outline: 0;
+}
+
+
+@media (max-width: 992px){
+    .navbar-brand{
+        border: none;
+    }
+}
