@@ -260,7 +260,7 @@
 
 .product-img{
     max-width: 100%;
-    height: 240px;
+    height: 350px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -268,7 +268,7 @@
     background: #aaa;
 }
 
-.upload-icon {
+.upload-icon{
     background: #455c71;
     width: 55px;
     height: 55px;
@@ -276,4 +276,9 @@
     text-align: center;
     padding-top: 15px;
     font-size: 22px;
+}
+
+.product-img img{
+    width: 100% !important;
+    max-height: 100%;
 }
