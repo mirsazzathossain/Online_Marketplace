@@ -11,8 +11,29 @@ $(function(){
         });
     });
 });
-var large = `<div class="col-lg-3 col-sm-6"><div class="product-item"><div class="pi-pic"><div class="tag-sale">ON SALE</div><img src="assets/images/product1.jpg" alt=""><div class="pi-links"><a href="#" class="add-card"><i class="fa fa-cart-plus" aria-hidden="true"></i><span>ADD TO CART</span></a></div></div><div class="pi-text"><h6>$35,00</h6><a href="">Flamboyant Pink Top</a></div></div></div>`;
-$('.product').prepend(large);
+
+/*
+===============
+    Product
+===============
+*/
+
+let product=[];
+
+if(window.localStorage.getItem('product')){
+    product = JSON.parse(window.localStorage.getItem('product'));
+}
+
+if(product.length != 0){
+    product.forEach(element => {
+        var large = `<div class="col-lg-3 col-sm-6"><div class="product-item"><div class="pi-pic"><div class="tag-sale">${element.tag}</div><img src="${element.URL}" alt=""><div class="pi-links"><a href="#" class="add-card"><i class="fa fa-cart-plus" aria-hidden="true"></i><span>ADD TO CART</span></a></div></div><div class="pi-text"><h6>$${element.price}</h6><a href="">${element.name}</a></div></div></div>`;
+        $('.product').prepend(large);
+    });
+}
+else{
+    $('.no-product').css('display', 'initial');
+}
+
 
 /*
 =======================
@@ -81,18 +102,26 @@ $('.custom-select').on('input', function(){
     }
 });
 
-
-
 $('#submit').on('click', function(){
     var name = $('#validationName').val();
     var description = $('#validationDescription').val();
     var tag = $('.custom-select option:selected').text();
     var price = $('#validationPrice').val();
     var quantity = $('#validationQuantity').val();
+    var URL = $('#validationURL').val();
+
+    
     
     if(name.length>0 && tag != "Choose tag" && (parseInt(price)>0 || price.length>=1) && (parseInt(quantity)>0 || quantity.length >= 1) && description.length >= 10 && /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/i.test($('#validationURL').val())){
-        console.log('hi')
+        product.push({name: name, description: description, URL: URL, tag: tag, price: price, quantity: quantity})
+        window.localStorage.setItem('product', JSON.stringify(product));
 
+        $('.no-product').css({'cssText': 'display: none !important'});
+        var large = `<div class="col-lg-3 col-sm-6"><div class="product-item"><div class="pi-pic"><div class="tag-sale">${tag}</div><img src="${URL}" alt=""><div class="pi-links"><a href="#" class="add-card"><i class="fa fa-cart-plus" aria-hidden="true"></i><span>ADD TO CART</span></a></div></div><div class="pi-text"><h6>$${price}</h6><a href="">${name}</a></div></div></div>`;
+        $('.product').prepend(large);
+
+        $('.add-product').css("display", "none");
+        $('.product-section').css('display', 'initial');
     }
     else{
         if(name.length == 0){
