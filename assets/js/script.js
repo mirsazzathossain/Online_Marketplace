@@ -38,7 +38,7 @@ if(window.localStorage.getItem('product')){
 
 if(product.length != 0){
     product.forEach(element => {
-        var large = `<div class="col-lg-3 col-sm-6"><div class="product-item"><div class="pi-pic"><div class="tag-sale">${element.tag}</div><img src="${element.URL}" alt=""><div class="pi-links"><a id="${element.id}" href="#" class="add-card"><i class="fa fa-cart-plus" aria-hidden="true"></i><span>ADD TO CART</span></a></div></div><div class="pi-text"><h6>$${element.price}</h6><a id="${element.id}" href="#?">${element.name}</a></div></div></div>`;
+        var large = `<div class="col-lg-3 col-sm-6" style="border: 1px solid #ffc515;"><div class="product-item"><div class="pi-pic"><div class="tag-sale">${element.tag}</div><img src="${element.URL}" alt=""><div class="pi-links"><a id="${element.id}" href="#" class="add-card"><i class="fa fa-cart-plus" aria-hidden="true"></i><span>ADD TO CART</span></a></div></div><div class="pi-text"><h6>$${element.price}</h6><a id="${element.id}" href="#?">${element.name}</a></div></div></div>`;
         $('.product').prepend(large);
     });
 }
@@ -139,7 +139,7 @@ $('#submit').on('click', function(){
         
 
         $('.no-product').css({'cssText': 'display: none !important'});
-        var large = `<div class="col-lg-3 col-sm-6"><div class="product-item"><div class="pi-pic"><div class="tag-sale">${tag}</div><img src="${URL}" alt=""><div class="pi-links"><a id="${id}" href="#" class="add-card"><i class="fa fa-cart-plus" aria-hidden="true"></i><span>ADD TO CART</span></a></div></div><div class="pi-text"><h6>$${price}</h6><a id="${id}" href="#?">${name}</a></div></div></div>`;
+        var large = `<div class="col-lg-3 col-sm-6" style=""border: 1px solid #ffc515;><div class="product-item"><div class="pi-pic"><div class="tag-sale">${tag}</div><img src="${URL}" alt=""><div class="pi-links"><a id="${id}" href="#" class="add-card"><i class="fa fa-cart-plus" aria-hidden="true"></i><span>ADD TO CART</span></a></div></div><div class="pi-text"><h6>$${price}</h6><a id="${id}" href="#?">${name}</a></div></div></div>`;
         $('.product').prepend(large);
 
         location.reload();
@@ -191,6 +191,7 @@ $('#addnewproduct').on('click', function(){
 });
 
 
+
     
 
     /*------------------
@@ -219,31 +220,52 @@ $('#addnewproduct').on('click', function(){
         }
         $('#single-product-row').remove();
         
-        $('#single-product-col').append(`<div class="row" id="single-product-row"><div class="col-lg-6"><div class="product-pic-zoom"><img class="product-big-img" src="${prod.URL}" alt="" style="width: 100%;"></div></div><div class="col-lg-6 product-details"><h2 class="p-title">${prod.name}</h2><h3 class="p-price">$${prod.price}</h3><h4 class="p-stock">Availablility: <span>${isAvailable}</span></h4><div class="quantity"><p>Quantity</p><div class="pro-qty"><input type="text" value="1"></div></div><a href="#" class="site-btn">Add to cart</a><div id="accordion" class="accordion-area"><div class="panel"><div class="panel-header" id="headingOne"><button class="panel-link active" data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapse1">Description</button></div><div id="collapse1" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion"><div class="panel-body">${prod.description}</div></div></div></div></div></div>`);
+        $('#single-product-col').append(`<div class="row" id="single-product-row" style="border: 1px solid #ffc515; padding:50px"><div class="col-lg-6"><div class="product-pic-zoom"><img class="product-big-img" src="${prod.URL}" alt="" style="width: 100%;"></div></div><div class="col-lg-6 product-details"><h2 class="p-title">${prod.name}</h2><h3 class="p-price">$${prod.price}</h3><h4 class="p-stock">Availablility: <span>${isAvailable}</span></h4><div class="quantity"><p>Quantity</p><div class="pro-qty"><input type="text" value="1" disabled></div></div><a id="${id}" href="#" class="site-btn site-btn-single">Add to cart</a><div id="accordion" class="accordion-area"><div class="panel"><div class="panel-header" id="headingOne"><button class="panel-link active" data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapse1">Description</button></div><div id="collapse1" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion"><div class="panel-body">${prod.description}</div></div></div></div></div></div>`);
         
-        var proQty = $('.pro-qty');
-        proQty.prepend('<span class="dec qtybtn">-</span>');
-        proQty.append('<span class="inc qtybtn">+</span>');
-        proQty.on('click', '.qtybtn', function () {
-            var $button = $(this);
-            var oldValue = $button.parent().find('input').val();
-            if ($button.hasClass('inc')) {
-                var newVal = parseFloat(oldValue) + 1;
-            } else {
-                // Don't allow decrementing below zero
-                if (oldValue > 0) {
-                    var newVal = parseFloat(oldValue) - 1;
-                } else {
-                    newVal = 0;
-                }
-            }
-            $button.parent().find('input').val(newVal);
-        });
+        
         
         $('.add-product').css("display", "none");
         $('.cart-section').css("display", "none");
         $('.product-section').css('display', 'none');
         $('.product-sectio').css('display', 'initial');
+
+        $('.product-details').on('click','a', function(){
+            var id = parseInt($(this).attr('id'));
+        
+        
+            cart.forEach((element, index) => {
+                if(parseInt(element.id) == id) {
+                    cart[index].quantity = parseInt(cart[index].quantity)+1;
+                    window.localStorage.setItem('cart', JSON.stringify(cart));
+                    id =0;
+                }
+            });
+            if(id!=0){
+                cart.push({id: id, quantity: 1});
+                window.localStorage.setItem('cart', JSON.stringify(cart));
+            }
+            var cartTotal = 0;
+            cart.forEach((element, index) => {
+                cartTotal += parseInt(cart[index].quantity);
+            });
+            $('#numItem').html(cartTotal);
+        
+            alertify.success('Product added to cart!!');
+        
+        
+        });
+
+
+
+
+
+
+
+
+
+
+
+
     });
 
 
@@ -397,8 +419,9 @@ $('#addnewproduct').on('click', function(){
         $('.product-section').css('display', 'none');
         $('.product-sectio').css('display', 'none');
 
-        
 
     });
+
+
 
     
