@@ -22,7 +22,6 @@ let product=[];
 let cart=[];
 
 
-
 if(window.localStorage.getItem('cart')){
     cart = JSON.parse(window.localStorage.getItem('cart'));
     var cartTotal = 0;
@@ -144,6 +143,7 @@ $('#submit').on('click', function(){
         $('.product').prepend(large);
 
         location.reload();
+        alertify.success('Product Added successfully!');
     }
     else{
         if(name.length == 0){
@@ -175,6 +175,10 @@ $('#submit').on('click', function(){
 $('#cancle').on('click', function(){
     $('.add-product').css("display", "none");
     $('.product-section').css('display', 'initial');
+    $('.product-sectio').css('display', 'none');
+
+    $('.cart-section').css('display', 'none');
+    alertify.error('Cancelled!!');
 });
 
 $('#addnewproduct').on('click', function(){
@@ -187,10 +191,6 @@ $('#addnewproduct').on('click', function(){
 });
 
 
-
-	/*-------------------
-		Quantity change
-	--------------------- */
     
 
     /*------------------
@@ -257,13 +257,11 @@ $('#addnewproduct').on('click', function(){
                 cart[index].quantity = parseInt(cart[index].quantity)+1;
                 window.localStorage.setItem('cart', JSON.stringify(cart));
                 id =0;
-                console.log(cart);
             }
         });
         if(id!=0){
             cart.push({id: id, quantity: 1});
             window.localStorage.setItem('cart', JSON.stringify(cart));
-            console.log(cart);
         }
         var cartTotal = 0;
         cart.forEach((element, index) => {
@@ -271,12 +269,20 @@ $('#addnewproduct').on('click', function(){
         });
         $('#numItem').html(cartTotal);
 
+        alertify.success('Product added to cart!!');
+
+
     });
 
     $('#cart-id').on('click', function(){
 
 
         $('#cart-table-body').empty();
+
+        if(cart.length==0){
+            var error='<tr><td><p>;( Cart is empty</p></td></tr>';
+            $('#cart-table-body').prepend(error);
+        }
         
 
         var total = 0;
@@ -287,10 +293,9 @@ $('#addnewproduct').on('click', function(){
             var prod = product.find(x => x.id == element.id);
             var quantity = element.quantity;
             total+=quantity*prod.price;
-            if(quantity!=0){
 
-                var cartProduct=`<tr id="cartProd${prod.id}"><td class="product-col"><img src="${prod.URL}" alt=""><div class="pc-title"><h4>${prod.name}</h4><p>$${prod.price}</p></div></td><td class="quy-col"><div class="quantity"><div class="pro-qty"><span id="${prod.id}" class="dec qtybtn">-</span><input id="${prod.id}num" type="text" value="${quantity}"><span id="${prod.id}" class="inc qtybtn">+</span></div></div></td><td class="total-col"><h4 id='total'>$${parseInt(prod.price)*quantity}</h4></td></tr>`;
-                $('#cart-table-body').prepend(cartProduct);}
+            var cartProduct=`<tr id="cartProd${prod.id}"><td class="product-col"><img src="${prod.URL}" alt=""><div class="pc-title"><h4>${prod.name}</h4><p>$${prod.price}</p></div></td><td class="quy-col"><div class="quantity"><div class="pro-qty"><span id="${prod.id}" class="dec qtybtn">-</span><input id="${prod.id}num" type="number" value="${quantity}" disabled max="${prod.quantity}"><span id="${prod.id}" class="inc qtybtn">+</span></div></div></td><td class="total-col"><h4 id='total${prod.id}'>$${parseInt(prod.price)*quantity}</h4></td></tr>`;
+            $('#cart-table-body').prepend(cartProduct);
             
         });
 
@@ -307,7 +312,8 @@ $('#addnewproduct').on('click', function(){
                 // Don't allow decrementing below zero
                 if (oldValue > 0) {
                     var newVal = parseFloat(oldValue) - 1;
-                } else {
+                }   
+                else {
                     newVal = 0;
                 }
             }
@@ -315,16 +321,59 @@ $('#addnewproduct').on('click', function(){
         });
 
         $('.pro-qty').on('click', '.qtybtn', function(){
+
             var id = $(this).attr('id');
             var idname= '#'+id+'num';
+            
+
+            var price;
+            var qtity;
+            
+            product.forEach(element=>{
+                if(element.id==id){
+                    price=element.price;
+                    qtity=element.quantity;
+                }
+            });
+
             var value = $(idname).val();
+
+            if(parseInt(value)>parseInt(qtity)){
+                $(this).parent().find('input').val(parseInt(qtity));
+                alertify.error('Can not add more product out of stock!!');
+                value = parseInt(value)-1;
+            }
+
+            
+
+            
+
+            var prevValue=parseInt($(`#total${id}`).text().substring(1, $(`#total${id}`).text().length));
+
+            var presValue;
+            
+
 
             cart.forEach((element, index) => {
                 if(parseInt(element.id) == id) {
                     cart[index].quantity = parseInt(value);
+                    presValue=parseInt(value)*parseInt(price);
+                    if(parseInt(element.quantity) == 0) {
+                        cart.splice(index, 1);
+                        alertify.error('Product removed from cart!!');
+
+                    }
                     window.localStorage.setItem('cart', JSON.stringify(cart));
+
+                    
+                    
                 }
             });
+
+            $(`#total${id}`).html(`$${presValue}`);
+            var subtotal=parseInt($("#total").text().substring(1, $("#total").text().length));
+            $('#total').html(`$${subtotal- (parseInt(prevValue)-presValue)}`);
+
 
             if(value==0){
                 $(`#cartProd${id}`).css('display', 'none');
@@ -335,7 +384,10 @@ $('#addnewproduct').on('click', function(){
             });
             $('#numItem').html(cartTotal);
 
-            
+            if(cart.length==0){
+                var error='<tr><td><p>;( Cart is empty</p></td></tr>';
+                $('#cart-table-body').prepend(error);
+            }
             
         });
 
@@ -344,6 +396,8 @@ $('#addnewproduct').on('click', function(){
         $('.cart-section').css("display", "initial");
         $('.product-section').css('display', 'none');
         $('.product-sectio').css('display', 'none');
+
+        
 
     });
 
