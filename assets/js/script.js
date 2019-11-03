@@ -180,6 +180,10 @@ $('#cancle').on('click', function(){
 $('#addnewproduct').on('click', function(){
     $('.add-product').css("display", "initial");
     $('.product-section').css('display', 'none');
+    $('.product-sectio').css('display', 'none');
+
+    $('.cart-section').css('display', 'none');
+
 });
 
 
@@ -273,19 +277,21 @@ $('#addnewproduct').on('click', function(){
 
 
         $('#cart-table-body').empty();
+        
 
         var total = 0;
 
         cart.forEach(element=>{
+
+
             var prod = product.find(x => x.id == element.id);
             var quantity = element.quantity;
             total+=quantity*prod.price;
             if(quantity!=0){
-            var cartProduct=`<tr id="cartProd${prod.id}"><td class="product-col"><img src="${prod.URL}" alt=""><div class="pc-title"><h4>${prod.name}</h4><p>$${prod.price}</p></div></td><td class="quy-col"><div class="quantity"><div class="pro-qty"><span id="${prod.id}" class="dec qtybtn">-</span><input id="${prod.id}num" type="text" value="${quantity}"><span id="${prod.id}" class="inc qtybtn">+</span></div></div></td><td class="total-col"><h4>$${parseInt(prod.price)*quantity}</h4></td></tr>`;
-            $('#cart-table-body').prepend(cartProduct);}
-            else{
-                
-            }
+
+                var cartProduct=`<tr id="cartProd${prod.id}"><td class="product-col"><img src="${prod.URL}" alt=""><div class="pc-title"><h4>${prod.name}</h4><p>$${prod.price}</p></div></td><td class="quy-col"><div class="quantity"><div class="pro-qty"><span id="${prod.id}" class="dec qtybtn">-</span><input id="${prod.id}num" type="text" value="${quantity}"><span id="${prod.id}" class="inc qtybtn">+</span></div></div></td><td class="total-col"><h4 id='total'>$${parseInt(prod.price)*quantity}</h4></td></tr>`;
+                $('#cart-table-body').prepend(cartProduct);}
+            
         });
 
         $('#total').html(`$${total}`);
