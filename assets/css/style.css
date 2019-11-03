@@ -547,9 +547,12 @@
   Product page
 ------------------*/
 
-.product-sectio {
-	padding-top: 70px;
-	padding-bottom: 65px;
+.product-sectio{
+	position: absolute;
+    left: 50%;
+    margin-left: -50% !important;
+    width: 100%;
+    margin-top: 50px;
 }
 
 .product-pic-zoom {
